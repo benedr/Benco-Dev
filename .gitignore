@@ -2,6 +2,7 @@
 node_modules
 /.pnp
 .pnp.js
+package-lock.json
 
 # Testing
 /coverage
@@ -45,4 +46,7 @@ Thumbs.db
 
 # Turbo
 .turbo
+
+# Vercel
+.vercel
 
