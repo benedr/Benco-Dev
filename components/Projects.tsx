@@ -1,95 +1,180 @@
-"use client"
+'use client'
 
-import { motion } from "framer-motion"
-import { ExternalLink, Github } from "lucide-react"
-import { projects } from "@/data/projects"
+import { useState, useEffect } from 'react'
+import { ExternalLink, Loader2 } from 'lucide-react'
+
+interface Project {
+  name: string
+  url: string
+  image?: string
+  description?: string
+}
 
 export default function Projects() {
+  // Hardcoded projects - add your links here
+  const [projects] = useState<Project[]>([
+    {
+      name: 'Game-Purchase Site',
+      url: 'https://gamecommerce-site.pages.dev',
+      description: 'A modern games purchase website with a sleek design.'
+    },
+    {
+      name: 'Social-Media WebApp',
+      url: 'https://ping-up-bybenco.vercel.app/',
+      description: 'Real-time social media WebApp with interactive features.'
+    },
+    {
+      name: 'Flower Shop',
+      url: 'https://flowershop-dwz.pages.dev/',
+      description: 'Full-featured online shopping platform.'
+    },
+    {
+      name: 'Crypto Trading Plartform Template',
+      url: 'https://cryptex-3qy.pages.dev/',
+      description: 'Feature-rich crypto trading application.'
+    },
+    {
+      name: 'Crowdfunding Platform',
+      url: 'https://hopebridge.site/',
+      description: 'Real-time donation platform for crowdfunding'
+    },
+  ])
+
+  const [loadingImages, setLoadingImages] = useState<{ [key: string]: boolean }>({})
+
+  useEffect(() => {
+    // Initialize loading state
+    const initialLoading: { [key: string]: boolean } = {}
+    projects.forEach((p) => {
+      initialLoading[p.url] = true
+    })
+    setLoadingImages(initialLoading)
+  }, [projects])
+
+  // We no longer use an external screenshot service (it required an API key).
+  // Projects are hardcoded above; previews open in an in-page iframe modal.
+
   return (
-    <section id="projects" className="py-20 px-6 bg-white">
+    <section id="projects" className="relative py-24 px-4">
       <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-5xl font-bold text-gray-800 mb-6">My Projects</h2>
-          <div className="w-24 h-1 bg-blue-600 mx-auto mb-8"></div>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Here are some of my recent projects that showcase my skills and creativity
+        {/* Section Title */}
+        <div className="text-center mb-16">
+          <span className="text-sm font-mono text-secondary mb-4 inline-block">
+            {'> '} My Work {' <'}
+          </span>
+          <h2 className="text-4xl md:text-5xl font-bold font-mono text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary mb-4">
+            Featured Projects
+          </h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Explore my recent projects and live demonstrations
           </p>
-        </motion.div>
+        </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project, index) => (
-            <motion.div
-              key={project.name}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              whileHover={{
-                y: -10,
-                rotateX: 5,
-                boxShadow: "0 20px 40px rgba(0,0,0,0.1)",
-              }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              className="bg-gradient-to-br from-white to-gray-50 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all cursor-pointer group"
-            >
-              <div className="h-48 bg-gradient-to-br from-blue-500 to-purple-600 relative overflow-hidden">
-                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <motion.div
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    className="text-white text-6xl font-bold opacity-20"
-                  >
-                    {project.name.charAt(0)}
-                  </motion.div>
-                </div>
-              </div>
-
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors">
-                  {project.name}
-                </h3>
-                <p className="text-gray-600 mb-4 text-sm leading-relaxed">{project.description}</p>
-
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {project.tech.map((tech) => (
-                    <span key={tech} className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-medium">
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="flex space-x-3">
-                  <motion.a
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    href={project.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    <span>Live Demo</span>
-                  </motion.a>
-
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="flex items-center space-x-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:border-blue-600 hover:text-blue-600 transition-colors text-sm font-medium"
-                  >
-                    <Github className="w-4 h-4" />
-                    <span>Code</span>
-                  </motion.button>
-                </div>
-              </div>
-            </motion.div>
+        {/* Projects Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {projects.map((project, idx) => (
+            <ProjectCard key={idx} project={project} isLoading={loadingImages[project.url]} />
           ))}
         </div>
+
+        {projects.length === 0 && (
+          <div className="text-center py-16 text-muted-foreground">
+            <p>No projects to display yet.</p>
+          </div>
+        )}
       </div>
     </section>
+  )
+}
+
+function ProjectCard({ project, isLoading }: { project: Project; isLoading: boolean }) {
+  const [previewOpen, setPreviewOpen] = useState(false)
+  const [iframeLoaded, setIframeLoaded] = useState(false)
+
+  const host = project.url.replace(/(^\w+:|^)\/\//, '')
+
+  return (
+    <div className="group relative overflow-hidden rounded-lg bg-card/80 border border-primary/40 hover:border-secondary/70 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/40 flex flex-col h-full backdrop-blur-sm">
+      {/* Visual placeholder (favicon + domain) */}
+      <div className="relative w-full aspect-video bg-gradient-to-br from-primary/8 to-secondary/8 flex items-center justify-center">
+        <div className="text-center">
+          <img
+            src={`https://www.google.com/s2/favicons?domain=${encodeURIComponent(project.url)}`}
+            alt="favicon"
+            className="inline-block w-8 h-8 mb-2"
+          />
+          <div className="text-sm font-mono text-muted-foreground truncate px-4">{host}</div>
+        </div>
+
+        {/* Hover Overlay: open preview modal */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation()
+              setPreviewOpen(true)
+            }}
+            className="inline-flex items-center gap-2 text-sm font-mono text-primary bg-background/40 px-3 py-2 rounded-md hover:brightness-105"
+          >
+            <ExternalLink className="w-4 h-4" />
+            Preview
+          </button>
+        </div>
+      </div>
+
+      {/* Project Info */}
+      <div className="p-6 flex-1 flex flex-col justify-between">
+        <div>
+          <h3 className="font-bold text-lg mb-2 text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary group-hover:from-secondary group-hover:to-primary transition-all duration-300">
+            {project.name}
+          </h3>
+          <p className="text-sm text-muted-foreground mb-4">{project.description}</p>
+        </div>
+
+        {/* URL Badge */}
+        <div className="text-xs text-secondary font-mono truncate opacity-70 group-hover:opacity-100 transition-opacity">{host}</div>
+      </div>
+
+      {/* Border Animation */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+        <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-primary/0 to-secondary/0 group-hover:from-primary group-hover:to-secondary transition-all" />
+        <div className="absolute right-0 top-0 h-full w-0.5 bg-gradient-to-b from-primary/0 to-secondary/0 group-hover:from-primary group-hover:to-secondary transition-all" />
+      </div>
+
+      {/* Preview modal */}
+      {previewOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+          <div className="w-full max-w-5xl h-[80vh] bg-card/90 rounded-lg overflow-hidden border border-primary/30 flex flex-col">
+            <div className="flex items-center justify-between p-3 border-b border-primary/10 bg-background/80">
+              <div className="flex items-center gap-3">
+                <img src={`https://www.google.com/s2/favicons?domain=${encodeURIComponent(project.url)}`} className="w-5 h-5" />
+                <div className="font-bold">{project.name}</div>
+                <div className="text-xs text-muted-foreground">{host}</div>
+              </div>
+              <div className="flex items-center gap-2">
+                <a href={project.url} target="_blank" rel="noopener noreferrer" className="text-sm px-3 py-1 bg-primary/10 rounded-md">Open in new tab</a>
+                <button onClick={() => setPreviewOpen(false)} className="text-sm px-3 py-1 bg-destructive/10 rounded-md">Close</button>
+              </div>
+            </div>
+            <div className="flex-1 relative">
+              {!iframeLoaded && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Loader2 className="w-8 h-8 text-primary animate-spin" />
+                </div>
+              )}
+              <iframe
+                src={project.url}
+                className={`w-full h-full border-0 ${iframeLoaded ? 'opacity-100' : 'opacity-0'}`}
+                onLoad={() => setIframeLoaded(true)}
+                title={project.name}
+              />
+            </div>
+            <div className="p-3 text-xs text-muted-foreground bg-background/80">
+              If the site doesn't load inside the preview (some sites disallow embedding), use "Open in new tab".
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   )
 }

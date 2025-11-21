@@ -1,12 +1,25 @@
 import type { Metadata } from 'next'
-import { GeistSans } from 'geist/font/sans'
-import { GeistMono } from 'geist/font/mono'
+import { Geist, Geist_Mono } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
+const _geist = Geist({ subsets: ["latin"] });
+const _geistMono = Geist_Mono({ subsets: ["latin"] });
+
 export const metadata: Metadata = {
-  title: 'Benco App',
-  description: 'Created by Benco',
-  generator: 'Benco dev',
+  title: 'Godwin Benedict | Benco Dev - Full Stack Developer',
+  description: 'Modern portfolio of Godwin Benedict (Benco Dev). Full stack developer crafting elegant web experiences with cutting-edge technology.',
+  generator: 'v0.app',
+  icons: {
+    // Use the custom Benco icon for favicon and apple icon
+    icon: [
+      {
+        url: '/benco-icon.svg',
+        type: 'image/svg+xml',
+      },
+    ],
+    apple: '/benco-icon.svg',
+  },
 }
 
 export default function RootLayout({
@@ -16,16 +29,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <style>{`
-html {
-  font-family: ${GeistSans.style.fontFamily};
-  --font-sans: ${GeistSans.variable};
-  --font-mono: ${GeistMono.variable};
-}
-        `}</style>
-      </head>
-      <body>{children}</body>
+      <body className={`font-sans antialiased`}>
+        {children}
+        <Analytics />
+      </body>
     </html>
   )
 }
